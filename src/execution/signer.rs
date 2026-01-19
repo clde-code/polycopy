@@ -1,9 +1,7 @@
 use crate::errors::{PolymarketError, Result};
 use crate::models::Order;
-use ethers::core::k256::ecdsa::SigningKey;
-use ethers::prelude::*;
 use ethers::signers::{LocalWallet, Signer};
-use ethers::types::{Address, Signature, H256, U256};
+use ethers::types::{Address, H256};
 use std::sync::Arc;
 
 pub struct OrderSigner {
@@ -47,17 +45,7 @@ impl OrderSigner {
 
     /// Sign an order using EIP-712 structured data hashing
     pub async fn sign_order(&self, order: &Order) -> Result<String> {
-        // Build EIP-712 domain
-        let domain = eip712_domain! {
-            name: "Polymarket CTF Exchange",
-            version: "1",
-            chain_id: self.chain_id,
-            verifying_contract: "0x4bFb41d5B3570DeFd03C39a9A4D8dE6Bd8B8982E".parse::<Address>()
-                .map_err(|e| PolymarketError::SigningError(format!("Invalid contract address: {}", e)))?,
-        };
-
-        // Create the order struct for EIP-712 signing
-        // Note: This is a simplified version - actual implementation would match Polymarket's exact schema
+        // Note: This is a simplified version - actual implementation would match Polymarket's exact EIP-712 schema
         let order_hash = self.hash_order(order)?;
 
         let signature = self

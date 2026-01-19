@@ -1,6 +1,6 @@
 use crate::errors::{PolymarketError, Result};
 use crate::execution::signer::OrderSigner;
-use crate::models::{MarketData, Order, OrderRequest, OrderResponse, OrderSide, OrderStatus, OrderType};
+use crate::models::{MarketData, Order, OrderRequest, OrderResponse, OrderSide, OrderType};
 use ethers::types::Address;
 use reqwest::Client;
 use rust_decimal::Decimal;

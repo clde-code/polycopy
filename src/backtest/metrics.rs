@@ -1,5 +1,6 @@
 use crate::models::{BacktestResults, ClosedPosition, ExecutedTrade};
 use rust_decimal::Decimal;
+use rust_decimal::MathematicalOps;
 
 pub struct PerformanceMetrics {
     trades: Vec<ExecutedTrade>,
@@ -136,7 +137,10 @@ impl PerformanceMetrics {
         // Calculate standard deviation
         let variance: Decimal = returns
             .iter()
-            .map(|r| (*r - mean_return).powi(2))
+            .map(|r| {
+                let diff = *r - mean_return;
+                diff * diff
+            })
             .sum::<Decimal>()
             / Decimal::from(returns.len());
 

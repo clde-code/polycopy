@@ -133,9 +133,10 @@ async fn run_live_trading(config: Config) -> Result<()> {
         .monitor_loop(|trade| {
             let executor = executor.clone();
             let logger = logger.clone();
+            let trade = trade.clone(); // Clone trade to move into async block
 
             // Log detected trade
-            if let Err(e) = logger.log_detected_trade(trade) {
+            if let Err(e) = logger.log_detected_trade(&trade) {
                 error!("Failed to log detected trade: {}", e);
             }
 
@@ -148,13 +149,13 @@ async fn run_live_trading(config: Config) -> Result<()> {
             tokio::spawn(async move {
                 match executor.get_balance().await {
                     Ok(balance) => {
-                        match executor.execute_trade(trade, balance).await {
+                        match executor.execute_trade(&trade, balance).await {
                             Ok(_) => {
                                 info!("Successfully executed copy trade for {}", trade.id);
                             }
                             Err(e) => {
                                 error!("Failed to execute trade {}: {}", trade.id, e);
-                                if let Err(log_err) = logger.log_failed_trade(trade, &e.to_string())
+                                if let Err(log_err) = logger.log_failed_trade(&trade, &e.to_string())
                                 {
                                     error!("Failed to log error: {}", log_err);
                                 }
