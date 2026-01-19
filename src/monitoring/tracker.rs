@@ -2,7 +2,7 @@ use crate::errors::{PolymarketError, Result};
 use crate::models::{Trade, TraderState};
 use ethers::types::Address;
 use reqwest::Client;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::time::Duration;
 use tracing::{debug, info, warn};
 
