@@ -1,0 +1,126 @@
+[general]
+# Operating mode: "live" or "backtest"
+mode = "backtest"
+
+# Wallet private key (load from environment variable for security)
+wallet_private_key = "${WALLET_PK}"
+
+# Polygon RPC endpoint
+polygon_rpc_url = "https://polygon-rpc.com"
+
+# Polymarket CLOB API URL
+polymarket_api_url = "https://clob.polymarket.com"
+
+[traders]
+# List of trader addresses to monitor and copy
+tracked_accounts = [
+    "0x1234567890123456789012345678901234567890",
+    "0xabcdefabcdefabcdefabcdefabcdefabcdefabcd"
+]
+
+[position_sizing]
+# Maximum position size in USDC (absolute limit)
+max_position_size_absolute = 1000.0
+
+# Maximum position size relative to portfolio (0.1 = 10%)
+max_position_size_relative = 0.1
+
+# Position sizing strategy: "absolute", "relative", or "hybrid"
+strategy = "hybrid"
+
+# For hybrid mode: which limit takes precedence
+# "absolute" = use absolute as hard cap, "relative" = use relative as hard cap
+priority = "absolute"
+
+[execution]
+# Order type: "FOK" (Fill or Kill), "GTC" (Good Till Cancelled), "GTD" (Good Till Date)
+order_type = "FOK"
+
+# For GTD orders: duration in seconds
+gtd_duration_seconds = 300
+
+# Timeout for order confirmation polling (milliseconds)
+order_confirmation_timeout_ms = 30000
+
+# Polling interval for order status (milliseconds)
+order_poll_interval_ms = 500
+
+# Maximum retry attempts for failed orders
+max_retries = 3
+
+# Minimum trade size to copy (in USDC) - filter out small trades
+min_trade_size_usdc = 5.0
+
+# Maximum trade size to copy (in USDC) - filter out very large trades
+max_trade_size_usdc = 50000.0
+
+# Polling interval for monitoring trader activity (seconds)
+poll_interval_seconds = 2
+
+[backtest]
+# Backtest mode: "simulation" or "historical"
+mode = "simulation"
+
+# Date range for backtesting
+start_date = "2024-06-01"
+end_date = "2024-12-31"
+
+# Initial balance for simulation (USDC)
+initial_balance_usdc = 10000.0
+
+# Historical data source: "polymarket_api" or "csv_file"
+data_source = "polymarket_api"
+
+# Path to CSV file (if using csv_file data source)
+data_file = "./data/trades.csv"
+
+# Slippage model: "linear", "percentage", or "market_impact"
+slippage_model = "linear"
+
+# For linear model: depth coefficient (higher = less slippage)
+depth_coefficient = 100000.0
+
+# For percentage model: slippage rate (0.005 = 0.5%)
+slippage_percentage = 0.005
+
+# Apply trading fees in simulation
+apply_fees = true
+
+# Fee rate in basis points (currently 0 for Polymarket)
+fee_rate_bps = 0
+
+# Apply gas costs (MATIC) in simulation
+apply_gas_costs = false
+
+# Estimated gas cost per trade in USD
+estimated_gas_per_trade_usd = 0.1
+
+[logging]
+# Log level: "trace", "debug", "info", "warn", "error"
+level = "info"
+
+# Log file output path
+file_output = "./logs/copy_trader.log"
+
+# Maximum log file size in MB
+max_log_size_mb = 100
+
+# Log retention in days
+log_retention_days = 30
+
+[database]
+# Database type: "sqlite", "postgres", "none"
+db_type = "sqlite"
+
+# Database connection string
+db_connection = "copy_trader.db"
+
+[notifications]
+# Slack webhook URL for notifications (optional)
+slack_webhook_url = "${SLACK_WEBHOOK}"
+
+# Enable notifications on successful trades
+notify_on_trade = true
+
+# Enable notifications on errors
+notify_on_error = true
