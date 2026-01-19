@@ -158,12 +158,19 @@ impl Config {
         // Expand wallet private key
         if self.general.wallet_private_key.starts_with("${") && self.general.wallet_private_key.ends_with("}") {
             let var_name = &self.general.wallet_private_key[2..self.general.wallet_private_key.len() - 1];
-            self.general.wallet_private_key = std::env::var(var_name).map_err(|_| {
-                PolymarketError::ConfigError(format!(
-                    "Environment variable {} not set",
-                    var_name
-                ))
-            })?;
+
+            // In backtest mode, wallet private key is not needed, so use a placeholder if not set
+            if self.general.mode == "backtest" {
+                self.general.wallet_private_key = std::env::var(var_name)
+                    .unwrap_or_else(|_| "0x0000000000000000000000000000000000000000000000000000000000000000".to_string());
+            } else {
+                self.general.wallet_private_key = std::env::var(var_name).map_err(|_| {
+                    PolymarketError::ConfigError(format!(
+                        "Environment variable {} not set",
+                        var_name
+                    ))
+                })?;
+            }
         }
 
         // Expand slack webhook URL if present
